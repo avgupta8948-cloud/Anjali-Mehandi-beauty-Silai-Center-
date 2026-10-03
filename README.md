@@ -1,2 +1,1 @@
-# Anjali-Mehandi-beauty-Silai-Center-
-Training Centre 
+index.html
