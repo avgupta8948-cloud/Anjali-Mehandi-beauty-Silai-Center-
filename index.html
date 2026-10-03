@@ -241,44 +241,4 @@ padding:7px
 🌿 Mehndi
 </button>
 </div>
-
-<!-- SILAI PHOTOS -->
-<div id="silaiGallery" class="gallery-grid">
-
-<div><img src="silai1.jpg"><div class="gallery-title">Silai Design</div></div>
-<div><img src="silai6.jpg"><div class="gallery-title">Silai Work</div></div>
-<div><img src="silai7.jpg"><div class="gallery-title">Blouse Design</div></div>
-<div><img src="silai8.jpg"><div class="gallery-title">Silai Work</div></div>
-<div><img src="silai9.jpg"><div class="gallery-title">Blouse Design</div></div>
-<div><img src="silai10.jpg"><div class="gallery-title">Silai Work</div></div>
-
-</div>
-
-<!-- MEHNDI PHOTOS -->
-<div id="mehndiGallery" class="gallery-grid" style="display:none">
-
-<div><img src="mehndi1.jpg"><div class="gallery-title">Simple Mehndi</div></div>
-<div><img src="mehndi2.jpg"><div class="gallery-title">Foot Mehndi</div></div>
-<div><img src="mehndi3.jpg"><div class="gallery-title">Bridal Mehndi</div></div>
-
-</div>
-
-</section>
-
-<script>
-function showPhotos(type,btn){
-
-document.getElementById("silaiGallery").style.display=
-type=="silai"?"grid":"none";
-
-document.getElementById("mehndiGallery").style.display=
-type=="mehndi"?"grid":"none";
-
-document.querySelectorAll(".gallery-buttons button")
-.forEach(function(x){x.classList.remove("active")});
-
-btn.classList.add("active");
-}
-</script>
-<!-- PHOTO GALLERY END -->
 </body></html>
