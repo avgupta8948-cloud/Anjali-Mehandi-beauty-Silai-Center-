@@ -61,7 +61,7 @@ input:focus,select:focus,textarea:focus{border-color:#b31b77;box-shadow:0 0 0 3p
 
 <div id="beauty" class="form"><div class="title beauty">💄 Beauty Parlour — Enquiry</div><form onsubmit="send(event,'beauty','Beauty Parlour')">
 <div class="grid2"><div><label>पूरा नाम *</label><input id="beauty_n" required></div><div><label>मोबाइल नंबर *</label><input id="beauty_p" required maxlength="10" inputmode="numeric"></div></div>
-<div class="grid2"><div><label>गाँव / मोहल्ला</label><input id="beauty_a"></div><div><label>किस दिन चाहिए?</label><input id="beauty_d" type="date"></div></div>
+<div class="grid2"><div><label>गाँव / मोहल्ला</label><input id="beauty_a"></div><div><label>सेवा की तारीख?</label><input id="beauty_d" type="date"></div></div>
 <label>कौन-कौन सी सेवा?</label><div class="checks">
 <label class="check"><input type="checkbox" name="beauty_s" value="Eyebrow/Threading"> Eyebrow/Threading</label><label class="check"><input type="checkbox" name="beauty_s" value="Cleanup"> Cleanup</label><label class="check"><input type="checkbox" name="beauty_s" value="Facial"> Facial</label><label class="check"><input type="checkbox" name="beauty_s" value="Waxing"> Waxing</label><label class="check"><input type="checkbox" name="beauty_s" value="Hair Cutting"> Hair Cutting</label><label class="check"><input type="checkbox" name="beauty_s" value="Simple Makeup"> Simple Makeup</label><label class="check"><input type="checkbox" name="beauty_s" value="Party Makeup"> Party Makeup</label><label class="check"><input type="checkbox" name="beauty_s" value="Bridal Makeup"> Bridal Makeup</label></div>
 <div class="home"><b>🏠 सुविधा कहाँ चाहिए?</b><div class="radio-row"><label class="radio"><input type="radio" name="beauty_h" value="घर बैठे"> घर बैठे</label><label class="radio"><input type="radio" name="beauty_h" value="सेंटर पर" checked> सेंटर पर</label></div></div>
@@ -180,7 +180,7 @@ async function send(e,id,type){
   Object.entries(data).forEach(([k,v])=>params.append(k,v));
 
   if(button){button.disabled=true;button.textContent="⏳ जानकारी भेजी जा रही है...";}
-  setStatus("⏳ आपकी जानकारी Google Sheet में भेजी जा रही है...");
+  setStatus("⏳ आपकी जानकारी भेजी जा रही है...");
 
   try{
     /* Apps Script को form-urlencoded POST भेजा जा रहा है।
