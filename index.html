@@ -45,6 +45,32 @@ input:focus,select:focus,textarea:focus{border-color:#b31b77;box-shadow:0 0 0 3p
 .contact a{box-shadow:0 4px 12px rgba(70,10,70,.07)}
 .footer{background:linear-gradient(135deg,#4f1855,#72166b);padding:20px 14px}
 @media(max-width:400px){.welcome h1{font-size:23px}.form{margin-left:10px;margin-right:10px}.services{padding-left:10px;padding-right:10px}}
+
+/* ===== RECEIPT ===== */
+.receipt-wrap{display:none;margin:14px 14px 24px;padding:16px;border-radius:22px;background:#fff;border:1px solid #ead3e4;box-shadow:0 8px 25px rgba(93,23,110,.12)}
+.receipt-wrap.show{display:block}
+.receipt-card{border:2px dashed #b51b77;border-radius:18px;padding:18px;background:#fffafd}
+.receipt-head{text-align:center;border-bottom:1px solid #ead3e4;padding-bottom:12px;margin-bottom:12px}
+.receipt-head h2{margin:4px 0;color:#9b005c;font-size:22px}
+.receipt-head p{margin:3px 0;color:#6d536a;font-size:13px}
+.receipt-no{display:inline-block;margin-top:8px;padding:7px 12px;border-radius:999px;background:#fff0f7;color:#9b005c;font-weight:800}
+.receipt-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #f0e5ee;font-size:14px}
+.receipt-row b{color:#542052;min-width:105px}
+.receipt-row span{text-align:right;color:#333;white-space:pre-wrap}
+.receipt-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+.receipt-btn{border:0;border-radius:12px;padding:12px;font-weight:800;cursor:pointer}
+.print-btn{background:#9b005c;color:#fff}
+.close-receipt-btn{background:#eee5f1;color:#63216b}
+@media print{
+  body{background:#fff!important}
+  body>*:not(.page){display:none!important}
+  .page>*:not(#receiptWrap){display:none!important}
+  #receiptWrap{display:block!important;margin:0!important;box-shadow:none!important;border:0!important}
+  .receipt-wrap{box-shadow:none!important;border:0!important}
+  .receipt-card{box-shadow:none!important}
+  .receipt-actions{display:none!important}
+}
+
 </style>
 </head>
 <body><div class="page">
@@ -98,6 +124,24 @@ input:focus,select:focus,textarea:focus{border-color:#b31b77;box-shadow:0 0 0 3p
 <button class="btn submit">✅ जानकारी Submit करें</button><button type="button" class="btn back" onclick="closeF()">← वापस</button></form></div>
 
 <div id="submitStatus" class="submit-status" aria-live="polite"></div>
+
+<div id="receiptWrap" class="receipt-wrap">
+  <div class="receipt-card">
+    <div class="receipt-head">
+      <div style="font-size:30px">🌸</div>
+      <h2>Anjali Mehandi, Beauty & Silai Center</h2>
+      <p>Sahabaganj Bazaar, Sultanpur – 227808</p>
+      <p>📞 9076698119</p>
+      <div id="receiptNo" class="receipt-no"></div>
+    </div>
+    <div id="receiptRows"></div>
+    <div class="receipt-actions">
+      <button type="button" class="receipt-btn print-btn" onclick="printReceipt()">🖨️ Receipt Print करें</button>
+      <button type="button" class="receipt-btn close-receipt-btn" onclick="closeReceipt()">✕ बंद करें</button>
+    </div>
+  </div>
+</div>
+
 <div class="contact"><a class="call" href="tel:+919076698119">📞 Call करें</a><a class="wa" href="https://wa.me/919076698119" target="_blank">💬 WhatsApp</a></div>
 <footer class="footer"><b>Anjali Mehandi, Beauty & Silai Center</b><br>📍 Sahabaganj Bazaar, Sultanpur – 227808<br>📞 9076698119 • ✉️ avgupta8948@gmail.com<br>🌸 आपकी सुविधा, आपका हुनर, आपका आत्मनिर्भर भविष्य 🌸</footer>
 </div>
@@ -142,7 +186,8 @@ function buildData(id,type){
     phone:val(id+"_p"),
     village:val(id+"_a"),
     submittedAt:new Date().toLocaleString("en-IN",{timeZone:"Asia/Kolkata"}),
-    source:"Anjali Mehandi Beauty & Silai Center Website"
+    source:"Anjali Mehandi Beauty & Silai Center Website",
+    receiptNo:makeReceiptNo()
   };
   if(id==="beauty"){
     d.date=val("beauty_d"); d.services=checks("beauty_s"); d.homeService=radio("beauty_h");
@@ -164,6 +209,34 @@ function buildData(id,type){
   d.details=JSON.stringify(d);
   return d;
 }
+
+function makeReceiptNo(){
+  const d=new Date();
+  const pad=n=>String(n).padStart(2,"0");
+  return "AMC-"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds())+"-"+Math.floor(100+Math.random()*900);
+}
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+function showReceipt(data){
+  const no=data.receiptNo || makeReceiptNo();
+  document.getElementById("receiptNo").textContent="Receipt No. "+no;
+  const labels={service:"सेवा",name:"नाम",phone:"मोबाइल",village:"गाँव/पता",date:"तारीख",services:"सेवा/कोर्स",homeService:"Home Service",contactTime:"संपर्क का समय",message:"अन्य जानकारी",people:"लोगों की संख्या",address:"पता",quantity:"कपड़ों की संख्या",measure:"माप",age:"उम्र",courses:"कोर्स",experience:"अनुभव",goal:"उद्देश्य"};
+  const skip=new Set(["receiptNo","source","submittedAt","details"]);
+  let rows="";
+  Object.entries(data).forEach(([k,v])=>{
+    if(skip.has(k)||!v||v==="नहीं बताया"||v==="नहीं चुना") return;
+    rows+=`<div class="receipt-row"><b>${esc(labels[k]||k)}</b><span>${esc(v)}</span></div>`;
+  });
+  rows+=`<div class="receipt-row"><b>Submit समय</b><span>${esc(data.submittedAt||"")}</span></div>`;
+  document.getElementById("receiptRows").innerHTML=rows;
+  const wrap=document.getElementById("receiptWrap");
+  wrap.classList.add("show");
+  wrap.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function printReceipt(){window.print();}
+function closeReceipt(){document.getElementById("receiptWrap").classList.remove("show");}
+
 async function send(e,id,type){
   e.preventDefault();
   const form=e.target;
@@ -192,7 +265,8 @@ async function send(e,id,type){
       keepalive:true
     });
 
-    setStatus("✅ आपकी जानकारी Submit हो गई है। हम आपसे जल्द संपर्क करेंगे।");
+    setStatus("✅ आपकी जानकारी Submit हो गई है। आपकी receipt तैयार है।");
+    showReceipt(data);
     form.reset();
     window.scrollTo({top:document.getElementById("submitStatus").offsetTop-20,behavior:"smooth"});
   }catch(err){
